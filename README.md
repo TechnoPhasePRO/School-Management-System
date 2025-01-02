@@ -383,6 +383,88 @@ To access Swagger documentation and test APIs locally:
 
 ---
 
+## Authentication Flow
+The authentication flow for this project involves the following steps:
+
+1. User registers by providing a name, email, password, and role.
+2. The server generates a JWT token upon successful registration and sends it back to the client.
+3. The client sends the token in the Authorization header of subsequent requests to authenticate themselves.
+4. The server verifies the token and checks if the user is authorized to access the requested resource.
+5. If the token is valid and the user is authorized, the server processes the request.
+6. If the token is invalid or the user is not authorized, the server returns an appropriate error response.
+
+## Error Codes and Handling
+The following error codes are used in this project:
+
+- 400 Bad Request: The request was invalid or cannot be processed.
+- 401 Unauthorized: The user is not authenticated or does not have permission to access the requested resource.
+- 403 Forbidden: The user is authenticated but does not have permission to access the requested resource.
+- 404 Not Found: The requested resource was not found.
+- 500 Internal Server Error: An unexpected error occurred on the server.
+
+## Database Schema Diagram
+The database schema consists of the following entities:
+
+1. User
+    - id (primary key)
+    - name
+    - email
+    - password
+    - role (enum: superadmin, school-admin)
+    - tokens (array of tokens)
+
+2. School
+    - id (primary key)
+    - name
+    - address
+    - city
+    - state
+    - zip
+    - country
+
+3. Classroom
+    - id (primary key)
+    - name
+    - capacity
+    - resources (array of resources)
+    - schoolId (foreign key referencing School)
+4. Student
+    - id (primary key)
+    - name
+    - email
+    - phone
+    - address
+    - city
+    - state
+    - zip
+    - country
+    - schoolId (foreign key referencing School)
+    - classroomId (foreign key referencing Classroom)
+
+Here's a simple diagram illustrating the relationships between these entities:
+```
++---------------+
+|     User     |
++---------------+
+       |
+       | 1:N
+       v
++---------------+
+|    School    |
++---------------+
+       |
+       | 1:N
+       v
++---------------+
+|  Classroom  |
++---------------+
+       |
+       | 1:N
+       v
++---------------+
+|   Student   |
++---------------+
+```
 ## Notes
 
 - Ensure MongoDB is running locally or update the `DB_URI` in the `.env` file when running locally.
