@@ -3,6 +3,12 @@
 ## Description
 This project is a REST API for managing schools, classrooms, and students. It provides functionality for creating, reading, updating, and deleting data related to schools, classrooms, and students.
 
+The project implements role-based access control (RBAC) with three main roles:
+
+- Superadmin: Full system access.
+- School Administrator: Access restricted to their assigned school's resources.
+- Student: Limited access to personal data and relevant resources.
+
 ---
 
 ## Installation
@@ -72,18 +78,77 @@ To access Swagger documentation and test APIs locally:
 
 ## API Endpoints
 
+### Authentication
+
+- **Register a new user**
+  - Method: POST
+  - URL (local): `http://localhost:3000/api/auth/register`
+  - URL (deployed): `https://school-management-system-alop.onrender.com/api/auth/register`
+  - Request Body (JSON):
+    ```json
+      {
+        "name": "Super Admin",
+        "email": "superadmin@example.com",
+        "password": "password123",
+        "role": "superadmin"
+      }
+    ```
+  - Response Body (JSON):
+    ```json
+      {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Nzc2Y2VhNTViMzhlMDIxYmUxZDUwZTci"
+      }
+    ```
+
+- **Login an existing user**
+  - Method: POST
+  - URL (local): `http://localhost:3000/api/auth/login`
+  - URL (deployed): `https://school-management-system-alop.onrender.com/api/auth/login`
+  - Request Body (JSON):
+    ```json
+      {
+        "email": "superadmin@example.com",
+        "password": "password123"
+      }
+    ```
+  - Response Body (JSON):
+    ```json
+      {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Nzc2Y2VhNTViMzhlMDIxYmUxZDUwZTci"
+      }
+    ```
+
 ### Schools
 
 - **Get all schools**
   - Method: GET
   - URL (local): `http://localhost:3000/api/schools`
   - URL (deployed): `https://school-management-system-alop.onrender.com/api/schools`
+  - Requires Bearer Token: Yes
+  - Response Body (JSON):
+    ```json
+      [
+        {
+            "_id": "6776168d9472d392a461c9d8",
+            "name": "ABC High School",
+            "address": "123 Main St",
+            "city": "Anytown",
+            "state": "TEXAS",
+            "zip": "12345",
+            "country": "USA",
+            "createdAt": "2025-01-02T04:31:09.064Z",
+            "updatedAt": "2025-01-02T04:31:09.065Z",
+            "__v": 0
+        },
+      ]
+      ```
 
 - **Create a school**
   - Method: POST
   - URL (local): `http://localhost:3000/api/schools`
   - URL (deployed): `https://school-management-system-alop.onrender.com/api/schools`
-  - Body (JSON):
+  - Requires Bearer Token: Yes
+  - Request Body (JSON):
     ```json
     {
       "name": "Lincoln High School",
@@ -94,16 +159,54 @@ To access Swagger documentation and test APIs locally:
       "country": "USA"
     }
     ```
+    - Response Body (JSON):
+    ```json
+      {
+          "name": "Lincoln High School",
+          "address": "123 Main St",
+          "city": "Anytown",
+          "state": "TEXAS",
+          "zip": "12345",
+          "country": "USA",
+          "_id": "6776d4d44c42f7ae9164d909",
+          "createdAt": "2025-01-02T18:03:00.430Z",
+          "updatedAt": "2025-01-02T18:03:00.430Z",
+          "__v": 0
+      }
+      ```
 
 - **Get school by ID**
   - Method: GET
   - URL (local): `http://localhost:3000/api/schools/{schoolId}`
   - URL (deployed): `https://school-management-system-alop.onrender.com/api/schools/{schoolId}`
+  - Requires Bearer Token: Yes
+  - Response Body (JSON):
+    ```json
+      {
+          "_id": "6776d4d44c42f7ae9164d909",
+          "name": "Lincoln High School",
+          "address": "123 Main St",
+          "city": "Anytown",
+          "state": "TEXAS",
+          "zip": "12345",
+          "country": "USA",
+          "createdAt": "2025-01-02T18:03:00.430Z",
+          "updatedAt": "2025-01-02T18:03:00.430Z",
+          "__v": 0
+      }
+    ```
 
 - **Delete a school**
   - Method: DELETE
   - URL (local): `http://localhost:3000/api/schools/{schoolId}`
   - URL (deployed): `https://school-management-system-alop.onrender.com/api/schools/{schoolId}`
+  - Requires Bearer Token: Yes
+  - Response Body (JSON):
+    ```json
+      {
+          "message": "School deleted successfully"
+      }
+    ```
 
 ### Classrooms
 
@@ -111,12 +214,33 @@ To access Swagger documentation and test APIs locally:
   - Method: GET
   - URL (local): `http://localhost:3000/api/classrooms`
   - URL (deployed): `https://school-management-system-alop.onrender.com/api/classrooms`
+  - Requires Bearer Token: Yes
+  - Response Body (JSON):
+  ```json
+    [
+        {
+            "_id": "677616be9950a30e2c17d1cb",
+            "name": "Second Classroom",
+            "capacity": 30,
+            "resources": [
+                "Whiteboard",
+                "Chalk"
+            ],
+            "schoolId": "6776168d9472d392a461c9d8",
+            "createdAt": "2025-01-02T04:31:58.131Z",
+            "updatedAt": "2025-01-02T04:31:58.131Z",
+            "__v": 0
+        },
+
+    ]
+    ```
 
 - **Create a classroom**
   - Method: POST
   - URL (local): `http://localhost:3000/api/classrooms`
   - URL (deployed): `https://school-management-system-alop.onrender.com/api/classrooms`
-  - Body (JSON):
+  - Requires Bearer Token: Yes
+  - Request Body (JSON):
     ```json
     {
       "name": "First Classroom",
@@ -125,16 +249,56 @@ To access Swagger documentation and test APIs locally:
       "schoolId": "677607e984d8a2230e967b56"
     }
     ```
+  - Response Body (JSON):
+    ```json
+    {
+        "name": "Fifth Classroom",
+        "capacity": 30,
+        "resources": [
+            "Whiteboard",
+            "Chalk"
+        ],
+        "schoolId": "677607e984d8a2230e967b56",
+        "_id": "6776d5ca4c42f7ae9164d923",
+        "createdAt": "2025-01-02T18:07:06.855Z",
+        "updatedAt": "2025-01-02T18:07:06.855Z",
+        "__v": 0
+    }
+    ```
 
 - **Get classroom by ID**
   - Method: GET
   - URL (local): `http://localhost:3000/api/classrooms/{classroomId}`
   - URL (deployed): `https://school-management-system-alop.onrender.com/api/classrooms/{classroomId}`
+  - Requires Bearer Token: Yes
+  - Response Body (JSON):
+    ```json
+    {
+        "_id": "6776d5ca4c42f7ae9164d923",
+        "name": "Fifth Classroom",
+        "capacity": 30,
+        "resources": [
+            "Whiteboard",
+            "Chalk"
+        ],
+        "schoolId": "677607e984d8a2230e967b56",
+        "createdAt": "2025-01-02T18:07:06.855Z",
+        "updatedAt": "2025-01-02T18:07:06.855Z",
+        "__v": 0
+    }
+    ```
 
 - **Delete a classroom**
   - Method: DELETE
   - URL (local): `http://localhost:3000/api/classrooms/{classroomId}`
   - URL (deployed): `https://school-management-system-alop.onrender.com/api/classrooms/{classroomId}`
+  - Requires Bearer Token: Yes
+  - Response Body (JSON):
+    ```json
+    {
+      "message": "Classroom deleted successfully"
+    }
+    ```
 
 ### Students
 
@@ -142,12 +306,35 @@ To access Swagger documentation and test APIs locally:
   - Method: GET
   - URL (local): `http://localhost:3000/api/students`
   - URL (deployed): `https://school-management-system-alop.onrender.com/api/students`
+  - Requires Bearer Token: Yes
+  - Response Body (JSON):
+    ```json
+      [
+      {
+          "_id": "6776d6984c42f7ae9164d952",
+          "name": "John Doe",
+          "email": "johndoe@example.com",
+          "phone": "123-456-7890",
+          "address": "123 Main St",
+          "city": "Anytown",
+          "state": "TEXAS",
+          "zip": "12345",
+          "country": "USA",
+          "schoolId": "677607e984d8a2230e967b56",
+          "classroomId": "67760a138e465d01f7929d20",
+          "createdAt": "2025-01-02T18:10:32.316Z",
+          "updatedAt": "2025-01-02T18:10:32.316Z",
+          "__v": 0
+      }
+    ]
+    ```
 
 - **Create a student**
   - Method: POST
   - URL (local): `http://localhost:3000/api/students`
   - URL (deployed): `https://school-management-system-alop.onrender.com/api/students`
-  - Body (JSON):
+  - Requires Bearer Token: Yes
+  - Request Body (JSON):
     ```json
     {
       "name": "John Doe",
@@ -162,11 +349,37 @@ To access Swagger documentation and test APIs locally:
       "classroomId": "67760a138e465d01f7929d20"
     }
     ```
+  - Response Body (JSON):
+    ```json
+      {
+          "name": "John Doe",
+          "email": "johndoe@example.com",
+          "phone": "123-456-7890",
+          "address": "123 Main St",
+          "city": "Anytown",
+          "state": "TEXAS",
+          "zip": "12345",
+          "country": "USA",
+          "schoolId": "677607e984d8a2230e967b56",
+          "classroomId": "67760a138e465d01f7929d20",
+          "_id": "6776d6984c42f7ae9164d952",
+          "createdAt": "2025-01-02T18:10:32.316Z",
+          "updatedAt": "2025-01-02T18:10:32.316Z",
+          "__v": 0
+      }
+    ```
 
 - **Delete a student**
   - Method: DELETE
   - URL (local): `http://localhost:3000/api/students/{studentId}`
   - URL (deployed): `https://school-management-system-alop.onrender.com/api/students/{studentId}`
+  - Requires Bearer Token: Yes
+  - Response Body (JSON):
+    ```json
+    {
+      "message": "Student deleted successfully"
+    }
+    ```
 
 ---
 

@@ -5,7 +5,7 @@ const User = require('../models/User');
 const auth = async (req, res, next) => {
   try {
     const token = req.header('Authorization').replace('Bearer ', '');
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findOne({ _id: decoded._id, 'tokens.token': token });
     if (!user) {
       throw new Error();
@@ -38,14 +38,20 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    const user = new User({ name, email, password });
+    const { name, email, password, role } = req.body;
+
+    if (!['superadmin', 'school-admin'].includes(role)) {
+      return res.status(400).send({ error: 'Invalid role.' });
+    }
+
+    const user = new User({ name, email, password, role });
     await user.save();
     const token = await user.generateAuthToken();
     res.send({ token });
   } catch (error) {
-    res.status(400).send({ error: 'Invalid request.' });
+    res.status(400).send({ error: error.message });
   }
 };
+
 
 module.exports = { auth, login, register };

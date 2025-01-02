@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const School = require('../models/School');
 const schoolValidation = require('../validations/school');
+const authorize = require('../mws/authorize');
 
-router.get('/', async (req, res) => {
+router.get('/', authorize(['superadmin', 'school-admin']), async (req, res) => {
   try {
     const schools = await School.find();
     res.send(schools);
@@ -12,7 +13,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', authorize(['superadmin', 'school-admin']), async (req, res) => {
   try {
     const school = await School.findById(req.params.id);
     if (!school) {
@@ -24,7 +25,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', authorize(['superadmin']), async (req, res) => {
   try {
     const { error } = schoolValidation.validate(req.body);
     if (error) {
@@ -38,7 +39,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', authorize(['superadmin']), async (req, res) => {
   try {
     const { error } = schoolValidation.validate(req.body);
     if (error) {
@@ -56,9 +57,8 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authorize(['superadmin']), async (req, res) => {
   try {
-    console.log(req.params.id);
     const school = await School.findById(req.params.id);
     if (!school) {
       return res.status(404).send({ error: 'School not found' });

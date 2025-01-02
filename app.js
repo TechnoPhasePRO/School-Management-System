@@ -7,6 +7,7 @@ const schoolRoutes = require('./routes/schoolRoutes');
 const classroomRoutes = require('./routes/classroomRoutes');
 const studentRoutes = require('./routes/studentRoutes');
 const rateLimiter = require('./mws/rateLimit.mw');
+const authRoutes = require('./routes/authRoutes');
 const cors = require('cors');
 
 app.use(cors());
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use('/api/schools', schoolRoutes);
 app.use('/api/classrooms', classroomRoutes);
 app.use('/api/students', studentRoutes);
+app.use('/api/auth', authRoutes);
 
 app.use(rateLimiter);
 const managersLoader = new ManagersLoader({ config });
