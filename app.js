@@ -1,30 +1,31 @@
-const config                = require('./config/index.config.js');
-const Cortex                = require('ion-cortex');
-const ManagersLoader        = require('./loaders/ManagersLoader.js');
+const express = require('express');
+const app = express();
+const config = require('./config/index.config.js');
+const Cortex = require('ion-cortex');
+const ManagersLoader = require('./loaders/ManagersLoader.js');
+const schoolRoutes = require('./routes/schoolRoutes');
+const classroomRoutes = require('./routes/classroomRoutes');
+const studentRoutes = require('./routes/studentRoutes');
+const rateLimiter = require('./mws/rateLimit.mw');
+const cors = require('cors');
 
-const mongoDB = config.dotEnv.MONGO_URI? require('./connect/mongo')({
-    uri: config.dotEnv.MONGO_URI
-}):null;
+app.use(cors());
 
-const cache = require('./cache/cache.dbh')({
-    prefix: config.dotEnv.CACHE_PREFIX ,
-    url: config.dotEnv.CACHE_REDIS
-});
+const mongoDB = config.dotEnv.DB_URI
+  ? require('./connect/mongo')({
+      uri: config.dotEnv.DB_URI,
+    })
+  : null;
 
-const cortex = new Cortex({
-    prefix: config.dotEnv.CORTEX_PREFIX,
-    url: config.dotEnv.CORTEX_REDIS,
-    type: config.dotEnv.CORTEX_TYPE,
-    state: ()=>{
-        return {} 
-    },
-    activeDelay: "50ms",
-    idlDelay: "200ms",
-});
+app.use(express.json());
+app.use('/api/schools', schoolRoutes);
+app.use('/api/classrooms', classroomRoutes);
+app.use('/api/students', studentRoutes);
 
-
-
-const managersLoader = new ManagersLoader({config, cache, cortex});
+app.use(rateLimiter);
+const managersLoader = new ManagersLoader({ config });
 const managers = managersLoader.load();
 
-managers.userServer.run();
+app.listen(config.dotEnv.PORT, () => {
+  console.log(`Server is running on port ${config.dotEnv.PORT}`);
+});

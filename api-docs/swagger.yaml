@@ -1,0 +1,344 @@
+openapi: 3.0.0
+info:
+  title: API Documentation
+  description: API Documentation for the application
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+
+paths:
+  /classrooms:
+    get:
+      summary: Get all classrooms
+      responses:
+        200:
+          description: Classrooms retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Classroom'
+        401:
+          description: Unauthorized
+    post:
+      summary: Create a new classroom
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Classroom'
+      responses:
+        201:
+          description: Classroom created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classroom'
+        400:
+          description: Invalid request
+
+  /classrooms/{classroomId}:
+    get:
+      summary: Get a classroom by ID
+      parameters:
+        - in: path
+          name: classroomId
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Classroom retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classroom'
+        404:
+          description: Classroom not found
+    put:
+      summary: Update a classroom
+      parameters:
+        - in: path
+          name: classroomId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Classroom'
+      responses:
+        200:
+          description: Classroom updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classroom'
+        400:
+          description: Invalid request
+    delete:
+      summary: Delete a classroom
+      parameters:
+        - in: path
+          name: classroomId
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Classroom deleted successfully
+        404:
+          description: Classroom not found
+
+  /students:
+    get:
+      summary: Get all students
+      responses:
+        200:
+          description: Students retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+        401:
+          description: Unauthorized
+    post:
+      summary: Create a new student
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        201:
+          description: Student created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        400:
+          description: Invalid request
+
+  /students/{studentId}:
+    get:
+      summary: Get a student by ID
+      parameters:
+        - in: path
+          name: studentId
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Student retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        404:
+          description: Student not found
+    put:
+      summary: Update a student
+      parameters:
+        - in: path
+          name: studentId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        200:
+          description: Student updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        400:
+          description: Invalid request
+    delete:
+      summary: Delete a student
+      parameters:
+        - in: path
+          name: studentId
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Student deleted successfully
+        404:
+          description: Student not found
+
+  /schools:
+    get:
+      summary: Get all schools
+      responses:
+        200:
+          description: Schools retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/School'
+        401:
+          description: Unauthorized
+    post:
+      summary: Create a new school
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/School'
+      responses:
+        201:
+          description: School created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/School'
+        400:
+          description: Invalid request         
+
+  /schools/{schoolId}:
+    get:
+      summary: Get a school by ID
+      parameters:
+        - in: path
+          name: schoolId
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: School retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/School'
+        404:
+          description: School not found
+    put:
+      summary: Update a school
+      parameters:
+        - in: path
+          name: schoolId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/School'
+      responses:
+        200:
+          description: School updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/School'
+        400:
+          description: Invalid request
+    delete:
+      summary: Delete a school
+      parameters:
+        - in: path
+          name: schoolId
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: School deleted successfully
+        404:
+          description: School not found        
+components:
+  schemas:
+    Classroom:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        capacity:
+          type: integer
+        students:
+          type: array
+          items:
+            $ref: '#/components/schemas/Student'
+        createdDate:
+          type: string
+          format: date-time
+      example:
+        name: First Classroom
+        capacity: 30
+        resources:
+          - Whiteboard
+          - Chalk
+        schoolId: 64d7e4c8f35e1a1e8c2f
+
+    Student:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        classrooms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Classroom'
+        createdDate:
+          type: string
+          format: date-time
+      example:
+        name: John Doe
+        email: johndoe@example.com
+        phone: 123-456-7890
+        address: 123 Main St
+        city: Anytown
+        state: TEXAS
+        zip: 12345
+        country: USA
+        schoolId: 64d7e4c8f35e1a1e8c2f
+        classroomId: 64d7e4c8f35e1a1e8c2b
+
+    School:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        classrooms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Classroom'
+        createdDate:
+          type: string
+          format: date-time
+      example:
+        name: Lincoln High School
+        address: 123 Main St
+        city: Anytown
+        state: TEXAS
+        zip: 12345
+        country: USA
