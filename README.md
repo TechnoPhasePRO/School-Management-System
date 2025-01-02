@@ -22,7 +22,7 @@ This project is a REST API for managing schools, classrooms, and students. It al
 4. Set up the environment variables by creating a `.env` file in the root directory and adding the following:
    ```env
    PORT=3000
-   MONGO_URI=mongodb://localhost:27017/school-management-system
+   DB_URI=mongodb://localhost:27017/school-management-system
    ```
 
 ## Running the Application
