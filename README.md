@@ -6,12 +6,12 @@ This project is a REST API for managing schools, classrooms, and students. It al
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-repo/school-management.git
+   git clone https://github.com/TechnoPhasePRO/School-Management-System.git
    ```
 
 2. Navigate to the project directory:
    ```bash
-   cd school-management
+   cd School-Management-System
    ```
 
 3. Install dependencies:
@@ -22,7 +22,7 @@ This project is a REST API for managing schools, classrooms, and students. It al
 4. Set up the environment variables by creating a `.env` file in the root directory and adding the following:
    ```env
    PORT=3000
-   MONGO_URI=mongodb://localhost:27017/school-management
+   MONGO_URI=mongodb://localhost:27017/school-management-system
    ```
 
 ## Running the Application
