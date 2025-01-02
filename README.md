@@ -28,7 +28,7 @@ This project is a REST API for managing schools, classrooms, and students. It al
 ## Running the Application
 Start the server:
 ```bash
-node server.js
+npm start
 ```
 
 ## Swagger Documentation
